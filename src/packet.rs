@@ -35,6 +35,7 @@ pub enum QOS {
     EXACTLYONCE = 2,
 }
 
+#[derive(Debug, PartialEq, Eq)]
 pub enum FixedHeader {
     Standard {
         packet_type: ControlPacketType,
@@ -145,6 +146,195 @@ pub enum ControlPacketType {
     PINGRESP = 13,    // Client <-> Server, ping response
     DISCONNECT = 14,  // Client <-> Server, disconnect notification
     AUTH = 15,        // Client <-> Server, authentication exchange
+}
+
+#[cfg(test)]
+mod test_fixed_header_new {
+    use super::*;
+
+    #[test]
+    fn test_new_connect() {
+        let header = FixedHeader::new(ControlPacketType::CONNECT).unwrap();
+        assert_eq!(
+            header,
+            FixedHeader::Standard {
+                packet_type: ControlPacketType::CONNECT
+            }
+        );
+    }
+
+    #[test]
+    fn test_new_connack() {
+        let header = FixedHeader::new(ControlPacketType::CONNACK).unwrap();
+        assert_eq!(
+            header,
+            FixedHeader::Standard {
+                packet_type: ControlPacketType::CONNACK
+            }
+        );
+    }
+
+    #[test]
+    fn test_new_publish_incorrect_method() {
+        let header = FixedHeader::new(ControlPacketType::PUBLISH);
+        assert!(header.is_err());
+    }
+
+    #[test]
+    fn test_new_puback() {
+        let header = FixedHeader::new(ControlPacketType::PUBACK).unwrap();
+        assert_eq!(
+            header,
+            FixedHeader::Standard {
+                packet_type: ControlPacketType::PUBACK
+            }
+        );
+    }
+
+    #[test]
+    fn test_new_pubrec() {
+        let header = FixedHeader::new(ControlPacketType::PUBREC).unwrap();
+        assert_eq!(
+            header,
+            FixedHeader::Standard {
+                packet_type: ControlPacketType::PUBREC
+            }
+        );
+    }
+
+    #[test]
+    fn test_new_pubrel() {
+        let header = FixedHeader::new(ControlPacketType::PUBREL).unwrap();
+        assert_eq!(
+            header,
+            FixedHeader::Standard {
+                packet_type: ControlPacketType::PUBREL
+            }
+        );
+    }
+
+    #[test]
+    fn test_new_pubcomp() {
+        let header = FixedHeader::new(ControlPacketType::PUBCOMP).unwrap();
+        assert_eq!(
+            header,
+            FixedHeader::Standard {
+                packet_type: ControlPacketType::PUBCOMP
+            }
+        );
+    }
+
+    #[test]
+    fn test_new_subscribe() {
+        let header = FixedHeader::new(ControlPacketType::SUBSCRIBE).unwrap();
+        assert_eq!(
+            header,
+            FixedHeader::Standard {
+                packet_type: ControlPacketType::SUBSCRIBE
+            }
+        );
+    }
+
+    #[test]
+    fn test_new_suback() {
+        let header = FixedHeader::new(ControlPacketType::SUBACK).unwrap();
+        assert_eq!(
+            header,
+            FixedHeader::Standard {
+                packet_type: ControlPacketType::SUBACK
+            }
+        );
+    }
+
+    #[test]
+    fn test_new_unsubscribe() {
+        let header = FixedHeader::new(ControlPacketType::UNSUBSCRIBE).unwrap();
+        assert_eq!(
+            header,
+            FixedHeader::Standard {
+                packet_type: ControlPacketType::UNSUBSCRIBE
+            }
+        );
+    }
+
+    #[test]
+    fn test_new_unsuback() {
+        let header = FixedHeader::new(ControlPacketType::UNSUBACK).unwrap();
+        assert_eq!(
+            header,
+            FixedHeader::Standard {
+                packet_type: ControlPacketType::UNSUBACK
+            }
+        );
+    }
+
+    #[test]
+    fn test_new_pingreq() {
+        let header = FixedHeader::new(ControlPacketType::PINGREQ).unwrap();
+        assert_eq!(
+            header,
+            FixedHeader::Standard {
+                packet_type: ControlPacketType::PINGREQ
+            }
+        );
+    }
+
+    #[test]
+    fn test_new_pingresp() {
+        let header = FixedHeader::new(ControlPacketType::PINGRESP).unwrap();
+        assert_eq!(
+            header,
+            FixedHeader::Standard {
+                packet_type: ControlPacketType::PINGRESP
+            }
+        );
+    }
+
+    #[test]
+    fn test_new_disconnect() {
+        let header = FixedHeader::new(ControlPacketType::DISCONNECT).unwrap();
+        assert_eq!(
+            header,
+            FixedHeader::Standard {
+                packet_type: ControlPacketType::DISCONNECT
+            }
+        );
+    }
+
+    #[test]
+    fn test_new_auth() {
+        let header = FixedHeader::new(ControlPacketType::AUTH).unwrap();
+        assert_eq!(
+            header,
+            FixedHeader::Standard {
+                packet_type: ControlPacketType::AUTH
+            }
+        );
+    }
+
+    #[test]
+    fn test_new_invalid() {
+        let header = FixedHeader::new(ControlPacketType::RESERVED);
+        assert!(header.is_err());
+    }
+
+    #[test]
+    fn test_new_publish_invalid() {
+        let header = FixedHeader::new(ControlPacketType::PUBLISH);
+        assert!(header.is_err());
+    }
+
+    #[test]
+    fn test_new_invalid_packet_type() {
+        let header = FixedHeader::new(ControlPacketType::RESERVED);
+        assert!(header.is_err());
+    }
+
+    #[test]
+    fn test_new_invalid_packet_type_publish() {
+        let header = FixedHeader::new(ControlPacketType::PUBLISH);
+        assert!(header.is_err());
+    }
 }
 
 #[cfg(test)]
@@ -286,5 +476,14 @@ mod test_fixed_header_encode {
         let encoded = header.encode().unwrap();
 
         assert_eq!(encoded, [0b11110000, 0x00])
+    }
+
+    #[test]
+    fn test_encode_invalid_packet_type() {
+        let header = FixedHeader::Standard {
+            packet_type: ControlPacketType::RESERVED,
+        };
+        let encoded = header.encode();
+        assert!(encoded.is_err());
     }
 }
