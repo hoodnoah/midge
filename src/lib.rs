@@ -3,4 +3,4 @@
 extern crate std;
 
 pub mod error;
-pub mod packet;
+pub mod fixed_header;

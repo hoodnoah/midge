@@ -21,12 +21,6 @@ const PINGRESP_FLAGS: u8 = 0x00;
 const DISCONNECT_FLAGS: u8 = 0x00;
 const AUTH_FLAGS: u8 = 0x00;
 
-pub struct Packet {
-    pub fixed_header: FixedHeader,
-    pub variable_header: Option<VariableHeader>,
-    pub payload: Option<Payload>,
-}
-
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(u8)]
 pub enum QOS {
@@ -123,9 +117,6 @@ impl FixedHeader {
         Ok(header)
     }
 }
-
-pub struct VariableHeader {}
-pub struct Payload {}
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(u8)]
