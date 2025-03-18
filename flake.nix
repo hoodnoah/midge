@@ -41,6 +41,12 @@
               rustup component add rustfmt
             fi
 
+            # Set up cargo-tarpaulin for code coverage
+            if ! cargo install --list | grep -q "cargo-tarpaulin"; then
+              echo "🔧 Installing cargo-tarpaulin...";
+              cargo install cargo-tarpaulin --version 0.32.3
+            fi
+
             echo "🐚 Rust environment ready! 🦀"
           '';
         };
