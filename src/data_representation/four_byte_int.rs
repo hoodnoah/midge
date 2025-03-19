@@ -2,11 +2,11 @@
 pub struct FourByteInt(u32); // wrapper around a 32-bit integer; unsigned per the spec
 
 impl FourByteInt {
-    fn from_bytes(bytes: [u8; 4]) -> Self {
+    pub fn from_bytes(bytes: [u8; 4]) -> Self {
         Self(u32::from_be_bytes(bytes)) // big-endian
     }
 
-    fn to_bytes(self) -> [u8; 4] {
+    pub fn to_bytes(self) -> [u8; 4] {
         self.0.to_be_bytes() // big-endian
     }
 }

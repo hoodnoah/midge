@@ -11,7 +11,7 @@ impl VariableByteInt {
     const MAX_VALUE: u32 = 0x0FFF_FFFF;
 
     /// Creates a new Variable Byte Integer from a u32 value
-    fn new(value: u32) -> Result<Self, DataRepresentationError> {
+    pub fn new(value: u32) -> Result<Self, DataRepresentationError> {
         if value > Self::MAX_VALUE {
             return Err(DataRepresentationError::MalformedVariableByteInteger);
         }
@@ -33,17 +33,17 @@ impl VariableByteInt {
     }
 
     /// Getter for the value
-    fn value(self) -> u32 {
+    pub fn value(self) -> u32 {
         self.value
     }
 
     /// Getter for the length
-    fn length(self) -> usize {
+    pub fn length(self) -> usize {
         self.length
     }
 
     /// Encodes the value into a `VariableByteInt` format
-    fn encode(self) -> [u8; 4] {
+    pub fn encode(self) -> [u8; 4] {
         let mut x = self.value;
         let mut output = [0u8; 4];
         let mut i = 0;
@@ -68,7 +68,7 @@ impl VariableByteInt {
     }
 
     /// Decodes from a Variable Byte Integer byte sequence
-    fn decode(input: &[u8]) -> Result<Self, DataRepresentationError> {
+    pub fn decode(input: &[u8]) -> Result<Self, DataRepresentationError> {
         let mut multiplier = 1;
         let mut value: u32 = 0;
         let mut length = 0;
